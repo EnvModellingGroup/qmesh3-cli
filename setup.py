@@ -39,7 +39,7 @@ def main():
     version_copied = subprocess.call(['cp','VERSION','qmesh-cli/'])
     #Read version from file
     version_file = open('qmesh-cli/VERSION','r')
-    qmesh_cli_version_string = version_file.readline()
+    qmesh_cli_version_string = version_file.readline().strip()
     version_file.close()
 
     try:
@@ -53,7 +53,7 @@ def main():
   
     setup(
           name='qmesh-cli',
-          requires=['qmesh (==0.5)'],
+          requires=['qmesh (=='+str(qmesh_cli_version_string)+')'],
           #install_requires=['qmesh==0.5'],
           version=qmesh_cli_version_string,
           description = "A Command Line Interface to qmesh",
