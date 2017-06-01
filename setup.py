@@ -54,7 +54,7 @@ def main():
     setup(
           name='qmesh-cli',
           requires=['qmesh (=='+str(qmesh_cli_version_string)+')'],
-          #install_requires=['qmesh==0.5'],
+          install_requires=['qmesh==0.5'],
           version=qmesh_cli_version_string,
           description = "A Command Line Interface to qmesh",
           author = "The QMesh Development Team.",
