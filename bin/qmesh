@@ -2,14 +2,14 @@
 
 #    Copyright (C) 2013 Alexandros Avdis and others. See the AUTHORS file for a full list of copyright holders.
 #
-#    This file is part of QMesh.
+#    This file is part of qmesh-cli.
 #
-#    QMesh is free software: you can redistribute it and/or modify
+#    qmesh-cli is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    QMesh is distributed in the hope that it will be useful,
+#    qmesh-cli is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
@@ -21,21 +21,9 @@ import os
 import numpy as np
 import argparse
 import sys
-
-# Mess with sys.path to make sure we pull the development version of qmesh first (if available).
-try:
-    __file__
-except NameError:
-    __file__ = "."
-if (not sys.platform.startswith("win")):
-    qmesh_path = os.path.join( os.path.realpath(os.path.dirname(__file__)), os.pardir)
-    sys.path.insert(0, qmesh_path)
-else:
-    qmesh_path = os.getcwd()
-    
+import logging
 import qmesh
-import qmesh.logger as logger
-LOG = logger.get_logger()
+LOG = logging.getLogger('qmesh')
 
 def outputGridShapeArgument(s):
     #TODO: What is the argument 's' here?
