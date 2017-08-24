@@ -62,7 +62,7 @@ def main():
           url = "https://qmesh.org",
           packages = [ ],
           package_dir = { },
-          scripts=["bin/qmesh"],
+          scripts=["qmesh-cli/qmesh"],
           package_data = {'qmesh-cli':['VERSION','GIT_SHA_KEY','LICENSE','AUTHORS.md','README.md']},
           test_suite = "tests"
          )

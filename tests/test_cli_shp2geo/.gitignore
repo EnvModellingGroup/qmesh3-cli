@@ -1,0 +1,8 @@
+*.geo
+*.shp
+*.cpg
+*.dbf
+*.prj
+*.qpj
+*.shx
+qgis.db

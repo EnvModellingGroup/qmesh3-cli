@@ -40,7 +40,6 @@ def outputGridShapeArgument(s):
 def main():
     """ Parse command-line arguments and execute the user-chosen subcommand. """
     
-    LOG.info("Parsing command line arguments...")
     parser = argparse.ArgumentParser(prog="qmesh", description="Create meshes from GIS data")
                      
     # General qmesh options, to be specified before any sub-commands.
@@ -258,7 +257,7 @@ def generate_mesh(args):
         meshMetricRaster.fromFile(meshMetricRasterFile)
         
     # Create domain object.
-    domain = qmesh.meshing.GGeometry.Domain()
+    domain = qmesh.mesh.Domain()
     domain.setGeometry(loopShapes, polygonShapes)
     geoFilename = outputFilename+'.geo'
     if tcs != None:
@@ -279,11 +278,10 @@ def generate_mesh(args):
                               fldFilename)
     else:
         mshFilename= outputFilename+'.msh'
-        qmesh.gmshDomain(domain, \
-                           geoFilename, \
-                           fldFilename, \
-                           mshFilename, \
-                           gmshAlgo)
+        domain.gmsh(geoFilename, \
+                    fldFilename, \
+                    mshFilename, \
+                    gmshAlgo)
        
 
 def rst2fld(args):
