@@ -129,11 +129,13 @@ def main():
                            metavar='outputFilename', 
                            type=str, 
                            help='Name of gmsh field file')
-    parser_cm_rst2fld.add_argument('-s_crs', 
+    parser_cm_rst2fld.add_argument('--scs', 
+                           '-s',
                            dest='sourceCoordReferenceSystem', 
                            action='store', 
                            help='Coordinate Reference System of source files (input)')
-    parser_cm_rst2fld.add_argument('-t_crs', 
+    parser_cm_rst2fld.add_argument('--tcs', 
+                           '-t',
                            dest='targetCoordReferenceSystem', 
                            action='store', 
                            help='Coordinate Reference System of target file (output)')
@@ -258,7 +260,7 @@ def generate_mesh(args):
         meshMetricRaster.fromFile(meshMetricRasterFile)
         
     # Create domain object.
-    domain = qmesh.meshing.GGeometry.Domain()
+    domain = qmesh.mesh.Domain()
     domain.setGeometry(loopShapes, polygonShapes)
     geoFilename = outputFilename+'.geo'
     if tcs != None:
