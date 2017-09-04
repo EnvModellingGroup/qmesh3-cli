@@ -16,7 +16,7 @@
 #    along with QMesh.  If not, see <http://www.gnu.org/licenses/>.
 
 all:
-	python test_cli_shp2geo.py
+	python test_cli_mesh.py
 clean:
 	@rm -rf *.pyc
 	@rm -rf *.geo *.msh

@@ -20,7 +20,7 @@
 import unittest
 import qmesh
 
-class Test_cli_shp2geo(unittest.TestCase):
+class Test_cli_mesh(unittest.TestCase):
     '''Todo: add test documentation as class docstring '''
 
     def setUp(self):
