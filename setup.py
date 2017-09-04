@@ -68,7 +68,7 @@ def main():
          )
 
     # A little clean-up
-    subprocess.call(['rm','qmesh-cli/VERSION','qmesh-cli/GIT_SHA_KEY','qmesh-cli/LICENSE','qmesh-cli/AUTHORS.md','qmesh-cli/README.md'])
+    #subprocess.call(['rm','qmesh-cli/VERSION','qmesh-cli/GIT_SHA_KEY','qmesh-cli/LICENSE','qmesh-cli/AUTHORS.md','qmesh-cli/README.md'])
 
 if __name__=='__main__':
     main()
