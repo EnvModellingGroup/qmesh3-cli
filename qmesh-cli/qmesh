@@ -316,7 +316,8 @@ def publish(args):
    :returns: None   
    """
 
-   from qmesh.publish import publisher
+   import qmesh
+   qmesh.initialise()
 
    # What the user wants to publish (software, input data, or output data)
    try:
@@ -334,7 +335,7 @@ def publish(args):
       
    # Check that the .qgs project file actually exists.
    if(os.path.exists(args.path)):  
-      rdm = publisher.qmeshPublisher(path = args.path)
+      rdm = qmesh.publish.Publisher(path = args.path)
       rdm.publish(publication_type = publication_type, version = args.version, private=args.private)
    else:
       LOG.error("The path provided does not exist.")
