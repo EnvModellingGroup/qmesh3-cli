@@ -22,13 +22,28 @@ options:
 
 pipelines:
   default:
-    - step:
-        script:
-          # Set IMAGE_NAME to output docker image tag
-          - export IMAGE_NAME=qmesh/qmesh-containers:qmesh-cli100_ubuntu1604_qgisltr_gmsh304
-          # Build container (install qmesh and test)
-          - docker build -t $IMAGE_NAME ./tests/
-          # authenticate with the Docker Hub registry
-          - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
-          # push the new Docker image to the Docker registry
-          - docker push $IMAGE_NAME
+  branches:
+    master:
+      - step:
+          caches:
+            # Cache directory where all docker images are stored.
+            - /var/lib/docker/
+          script:
+            # Set IMAGE_NAME to output docker image tag
+            - export IMAGE_NAME=qmesh/qmesh-containers:qmesh-cli100_ubuntu1604_qgisltr_gmsh304
+            # Build container (install qmesh, qmesh-cli and test qmesh cli)
+            - docker build -t $IMAGE_NAME ./tests/
+            # authenticate with the Docker Hub registry
+            - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
+            # push the new Docker image to the Docker registry
+            - docker push $IMAGE_NAME
+    CI/*:
+      - step:
+          caches:
+            # Cache directory where all docker images are stored.
+            - /var/lib/docker/
+          script:
+            # Set IMAGE_NAME to output docker image tag
+            - export IMAGE_NAME=qmesh/qmesh-containers:qmesh-cli100_ubuntu1604_qgisltr_gmsh304
+            # Build container (install qmesh and test)
+            - docker build -t $IMAGE_NAME ./tests/
