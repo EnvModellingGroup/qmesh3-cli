@@ -35,11 +35,11 @@ class Test_cli_mesh(unittest.TestCase):
         qmesh.initialise()
         try:
             equatorLine = qmesh.vector.primitiveShapes.loxodromicLine( \
-                                startPoint = (-180,0), \
+                                startPoint = (-179,0), \
                                 trueNorthBearing = 90, \
                                 numbPoints=100, \
                                 loopArounds = 0, \
-                                endPoint = (180,0), \
+                                endPoint = (179,0), \
                                 coordRefSystem_string = "EPSG:4326")
             equatorLine.asShapes().writeFile(self.thisPath+'/equator.shp')
         except AssertionError:
