@@ -15,24 +15,24 @@
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with QMesh.  If not, see <http://www.gnu.org/licenses/>.
+#    along with qmesh-cli.  If not, see <http://www.gnu.org/licenses/>.
 
 def main():
     from setuptools import setup
     import os
     import subprocess
-
-
-    # Put file containing git sha key in the right place for the egg-file.
-    try:
-        git_sha_key = subprocess.check_output(['git','rev-parse','HEAD'])
-    except CalledProcessError:
-        git_sha_key = 'Could not obtain git sha key.'
-    git_sha_key_file = open('qmesh-cli/GIT_SHA_KEY','w')
-    git_sha_key_file.write(git_sha_key)
-    git_sha_key_file.close()
-    # Put files containing version, license, authors list and
+    # Put files containing git sha key, version, license, authors list and
     # README in the right place for the egg-file.
+    if not os.path.isfile('qmesh-cli/GIT_SHA_KEY'):
+        git_sha_key_copied = subprocess.call(['cp','GIT_SHA_KEY','qmesh-cli/'])
+        if git_sha_key_copied != 0:
+            try:
+                git_sha_key = subprocess.check_output(['git','rev-parse','HEAD'])
+            except:
+                git_sha_key = 'Could not obtain git sha key.'
+            git_sha_key_file = open('qmesh-cli/GIT_SHA_KEY','w')
+            git_sha_key_file.write(git_sha_key.strip())
+            git_sha_key_file.close()
     license_copied = subprocess.call(['cp','LICENSE','qmesh-cli/'])
     authors_copied = subprocess.call(['cp','AUTHORS.md','qmesh-cli/'])
     readme_copied = subprocess.call(['cp','README.md','qmesh-cli/'])
@@ -53,22 +53,24 @@ def main():
   
     setup(
           name='qmesh-cli',
-          requires=['qmesh (=='+str(qmesh_cli_version_string)+')'],
-          install_requires=['qmesh==1.0'],
           version=qmesh_cli_version_string,
           description = "A Command Line Interface to qmesh",
           author = "The QMesh Development Team.",
-          #author_email = "devel@qmesh.org",
-          url = "https://qmesh.org",
+          author_email = "develop@qmesh.org",
+          url = "http://www.qmesh.org",
+          download_url = 'https://bitbucket.org/qmesh-developers/qmesh/commits/tag/v'+qmesh_cli_version_string,
           packages = [ ],
           package_dir = { },
+          provides=['qmesh-cli'],
+          install_requires=['qmesh==1.0'],
           scripts=["qmesh-cli/qmesh"],
           package_data = {'qmesh-cli':['VERSION','GIT_SHA_KEY','LICENSE','AUTHORS.md','README.md']},
-          test_suite = "tests"
+          license='GPLv3',
+          test_suite = "tests",
+          keywords = ['GIS', 'mesh generation']
          )
 
-    # A little clean-up
-    #subprocess.call(['rm','qmesh-cli/VERSION','qmesh-cli/GIT_SHA_KEY','qmesh-cli/LICENSE','qmesh-cli/AUTHORS.md','qmesh-cli/README.md'])
+
 
 if __name__=='__main__':
     main()

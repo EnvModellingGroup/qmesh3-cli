@@ -15,23 +15,25 @@
 #    You should have received a copy of the GNU General Public License
 #    along with qmesh-cli.  If not, see <http://www.gnu.org/licenses/>.
 
-
-# enable Docker.
+# enable Docker
 options:
   docker: true
 
+definitions:
+  caches:
+    docker-dir-cache: /var/lib/docker/ 
+
 pipelines:
-  default:
   branches:
     master:
       - step:
           caches:
             # Cache directory where all docker images are stored.
-            - /var/lib/docker/
+            - docker-dir-cache
           script:
-            # Set IMAGE_NAME to output docker image tag
-            - export IMAGE_NAME=qmesh/qmesh-containers:qmesh-cli100_ubuntu1604_qgisltr_gmsh304
-            # Build container (install qmesh, qmesh-cli and test qmesh cli)
+            - export QMESH_CLI_VERSION=`cat VERSION`
+            - export IMAGE_NAME=qmesh/qmesh-containers:qmesh-cli${QMESH_VERSION}_ubuntu16.04_qgisltr_gmsh3.0.4
+            # Build container (install qmesh and test)
             - docker build -t $IMAGE_NAME ./tests/
             # authenticate with the Docker Hub registry
             - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
@@ -39,11 +41,31 @@ pipelines:
             - docker push $IMAGE_NAME
     CI/*:
       - step:
-          caches:
-            # Cache directory where all docker images are stored.
-            - /var/lib/docker/
+          image: qmesh/qmesh-containers:ubuntu1604_qgisltr_gmsh304
           script:
-            # Set IMAGE_NAME to output docker image tag
-            - export IMAGE_NAME=qmesh/qmesh-containers:qmesh-cli100_ubuntu1604_qgisltr_gmsh304
-            # Build container (install qmesh and test)
-            - docker build -t $IMAGE_NAME ./tests/
+            #- git pull origin master
+            - make install
+            - make test
+  custom: #Custom pipelines are triggered manually
+    test_on_ubuntu16.04_qgisltr_gmsh3.0.4:
+      - step:
+          image: qmesh/qmesh-containers:ubuntu1604_qgisltr_gmsh304
+          script:
+            - make install
+            - make test
+    deploy_on_pypi:
+      - step:
+          image: qmesh/qmesh-containers:ubuntu1604_qgisltr_gmsh304
+          script:
+            # install twine
+            - pip install twine 
+            # Get the git sha key of qmesh
+            - echo `git rev-parse HEAD` > GIT_SHA_KEY
+            # Create a source distribution
+            - python setup.py sdist
+            # create pypirc file
+            - echo '[pypi]' > $HOME/.pypirc
+            - echo 'username = '$PYPI_USERNAME >> $HOME/.pypirc
+            - echo 'password = '$PYPI_PASSWORD >> $HOME/.pypirc
+            # Upload to pypi
+            - twine upload dist/*
