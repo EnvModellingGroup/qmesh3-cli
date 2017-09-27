@@ -30,35 +30,27 @@ class Test_cli_mesh(unittest.TestCase):
             self.thisPath = os.path.dirname(os.path.abspath(thisFileName))
 
     def create_equator_shapefiles(self):
-        '''Todo: Add docstring'''
-        #Try equator in line-shapefiles
+        '''Create equator as shape-file, for testing purposes'''
         qmesh.initialise()
-        try:
-            equatorLine = qmesh.vector.primitiveShapes.loxodromicLine( \
-                                startPoint = (-180,0), \
+        equatorLine = qmesh.vector.primitiveShapes.loxodromicLine( \
+                                startPoint = (-179,0), \
                                 trueNorthBearing = 90, \
-                                numbPoints=100, \
+                                numbPoints=10, \
                                 loopArounds = 0, \
-                                endPoint = (180,0), \
+                                endPoint = (179,0), \
                                 coordRefSystem_string = "EPSG:4326")
-            equatorLine.asShapes().writeFile(self.thisPath+'/equator.shp')
-        except AssertionError:
-            self.assert_(False)
+        equatorLine.asShapes().writeFile(self.thisPath+'/equator.shp')
 
     def create_circular_lake(self):
-        '''Todo: Add docstring'''
-        #Try equator in line-shapefiles
+        '''Create a circle as shape-file, for testing purposes'''
         qmesh.initialise()
-        try:
-            islandShoreline = qmesh.vector.primitiveShapes.Circle(
+        islandShoreline = qmesh.vector.primitiveShapes.Circle(
                                 centerPointXi = 0.0,
                                 centerPointEta = 45.0,
                                 radius = 25,
                                 numbPoints = 100,
                                 coordRefSystem_string = "EPSG:4326")
-            islandShoreline.asShapes().writeFile(self.thisPath+'/circularLake.shp')
-        except AssertionError:
-            self.assert_(False)
+        islandShoreline.asShapes().writeFile(self.thisPath+'/circularLake.shp')
 
     def test_halfGlobe(self):
         '''Todo: Add docstring'''
@@ -66,16 +58,13 @@ class Test_cli_mesh(unittest.TestCase):
         #Create shapefiles.
         self.create_equator_shapefiles()
         #Try the conversion
-        try:
-            returnCode = subprocess.call(["qmesh","-v=error",
-                                          "generate_mesh",
-                                          "--tcs=PCC",
-                                          "--isGlobal",
-                                          self.thisPath+"/equator.shp",
-                                          self.thisPath+"/halfGlobe.geo"])
-            self.assertEqual(returnCode,0)
-        except AssertionError:
-            self.assert_(False)
+        returnCode = subprocess.call(["qmesh","-v=error",
+                                      "generate_mesh",
+                                      "--tcs=PCC",
+                                      "--isGlobal",
+                                      self.thisPath+"/equator.shp",
+                                      self.thisPath+"/halfGlobe"])
+        self.assertEqual(returnCode,0)
 
     def test_circularLake_PCC(self):
         '''Todo: Add docstring'''
@@ -83,15 +72,12 @@ class Test_cli_mesh(unittest.TestCase):
         #Create shapefiles.
         self.create_circular_lake()
         #Try the conversion
-        try:
-            returnCode = subprocess.call(["qmesh","-v=error",
-                                          "generate_mesh",
-                                          self.thisPath+"/circularLake.shp",
-                                          self.thisPath+"/circularLake_PCC.geo",
-                                          "--tcs=PCC"])
-            self.assertEqual(returnCode,0)
-        except AssertionError:
-            self.assert_(False)
+        returnCode = subprocess.call(["qmesh","-v=error",
+                                      "generate_mesh",
+                                      self.thisPath+"/circularLake.shp",
+                                      self.thisPath+"/circularLake_PCC",
+                                      "--tcs=PCC"])
+        self.assertEqual(returnCode,0)
 
     def test_circularLake_UTM30N(self):
         '''Todo: Add docstring'''
@@ -99,15 +85,12 @@ class Test_cli_mesh(unittest.TestCase):
         #Create shapefiles.
         self.create_circular_lake()
         #Try the conversion
-        try:
-            returnCode = subprocess.call(["qmesh","-v=error",
-                                          "generate_mesh",
-                                          self.thisPath+"/circularLake.shp",
-                                          self.thisPath+"/circularLake_UTM30N.geo",
-                                          "--tcs=EPSG:32630"])
-            self.assertEqual(returnCode,0)
-        except AssertionError:
-            self.assert_(False)
+        returnCode = subprocess.call(["qmesh","-v=error",
+                                      "generate_mesh",
+                                      self.thisPath+"/circularLake.shp",
+                                      self.thisPath+"/circularLake_UTM30N",
+                                      "--tcs=EPSG:32630"])
+        self.assertEqual(returnCode,0)
 
 if __name__ == '__main__':
     unittest.main()

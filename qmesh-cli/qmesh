@@ -240,14 +240,14 @@ def generate_mesh(args):
     gmshAlgo = args.gmshAlgo
 
     # Read in and sort-out the domain boundary geometry
-    boundaries = qmesh.vector.shapefileTools.Shapes()
+    boundaries = qmesh.vector.Shapes()
     boundaries.fromFile(boundary_file)
     boundaries.writeInfo()
     if polygon_file == "":
-        loopShapes = qmesh.vector.shapefileTools.identifyLoops(boundaries,
+        loopShapes = qmesh.vector.identifyLoops(boundaries,
                     isGlobal=isGlobal, defaultPhysID=default_PhysID,
                     fixOpenLoops=True)
-        polygonShapes = qmesh.vector.shapefileTools.identifyPolygons(loopShapes,
+        polygonShapes = qmesh.vector.identifyPolygons(loopShapes,
             isGlobal=isGlobal, smallestMeshedArea=smallestMeshArea, 
             meshedAreaPhysID = surfacePhysID)
     else:
@@ -255,7 +255,7 @@ def generate_mesh(args):
         
     # Read in the mesh-element-size metric, if provided
     if meshMetricRasterFile != None:
-        meshMetricRaster = qmesh.raster.meshMetricTools.raster()
+        meshMetricRaster = qmesh.raster.raster()
         meshMetricRaster.fromFile(meshMetricRasterFile)
         
     # Create domain object.
