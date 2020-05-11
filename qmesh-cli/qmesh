@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #    Copyright (C) 2013 Alexandros Avdis and others. See the AUTHORS file for a full list of copyright holders.
 #
@@ -47,7 +47,8 @@ def main():
     parser.add_argument("-v", "--verbosity", action="store", type=str, metavar="LEVEL", default="info", choices=['critical', 'error', 'warning', 'info', 'debug'], help="Log verbosity level.")
     
     # The available sub-commands.
-    subparsers = parser.add_subparsers(help='sub-command help')
+    subparsers = parser.add_subparsers(help='sub-command help',dest='cmd')
+    subparsers.required=True
     
     # Add a subparser for shapefile-to-gmsh conversion, with some help and a command
     parser_cm_generate_mesh = subparsers.add_parser('generate_mesh', help='Create a geo and mesh files from line and polygon shapefiles and raster files')
@@ -160,46 +161,6 @@ def main():
             help = 'Display the git sha key, of the installed copy.')
     parser_cm_display_git_sha_key.set_defaults(func=display_git_sha_key)
 
-    # Add a subparser for the qmesh publishing tool.
-    parser_cm_publish = subparsers.add_parser('publish', help = 'Publish the qmesh software and/or associated input/output data files.')
-    parser_cm_publish.add_argument("-s", "--software", 
-            dest='software', 
-            help="Publish the qmesh source code.", 
-            action="store_true", 
-            default=False
-            )
-    parser_cm_publish.add_argument("-i", "--input", 
-            dest='input',
-            help="Publish the input data files whose paths are specified in the options file.",
-            action="store_true", 
-            default=False
-            )
-    parser_cm_publish.add_argument("-o", "--output", 
-            dest='output', 
-            help="Publish the output data files whose paths are specified in the options file.", 
-            action="store_true", 
-            default=False
-            )
-    parser_cm_publish.add_argument("-v", "--version", 
-            dest='version', 
-            help="Publish a specific version of the qmesh source code identified by a given SHA-1 hash. Must be used in conjunction with the -s option.", 
-            action="store", 
-            type=str, 
-            default=None, 
-            metavar="HASH"
-            )
-    parser_cm_publish.add_argument("-p", "--private", 
-            dest='private', 
-            help="Publish the software or data, but keep it private. Note that any DOI generated will not be valid until the publication is made public.",
-            action="store_true", 
-            default=False
-            )
-    parser_cm_publish.add_argument("path", 
-            type=str, 
-            help="If -s is used, this is the path to the directory containing the qmesh source code. Otherwise, it is the path to the .qgs project file."
-            )
-    parser_cm_publish.set_defaults(func=publish)   
-
     # Parse the arguments, and strip out the common options
     args = parser.parse_args()
     
@@ -215,7 +176,7 @@ def main():
     # The rest of this function is effectively checking all of the arguments
     # against the command specified
     # Each command is given a function to execute via the "set_default" argument
-    args.func(args)
+    #args.func(args)
 
 #--------------------------------------------------------------------#
 # ----------     Functions proper from here on in       -------------#
@@ -309,39 +270,6 @@ def rst2fld(args):
     # Write the field to file. 
     raster.writefld(outputFilename,targetCoordReferenceSystem)
     return
-                                 
-def publish(args):
-   """ Publish software or input/output data using PyRDM.
-   
-   :arg args: The command-line arguments obtained from the ArgumentParser.
-   :raises ValueError: if the user has not specified what they want to publish.
-   :returns: None   
-   """
-
-   import qmesh
-   qmesh.initialise()
-
-   # What the user wants to publish (software, input data, or output data)
-   try:
-      if(args.software):
-         publication_type = "s"
-      elif(args.input):
-         publication_type = "i"
-      elif(args.output):
-         publication_type = "o"
-      else:
-         raise ValueError
-   except ValueError:
-      LOG.exception("You need to specify what you would like to publish: software, input data, or output data.")
-      return
-      
-   # Check that the .qgs project file actually exists.
-   if(os.path.exists(args.path)):  
-      rdm = qmesh.publish.Publisher(path = args.path)
-      rdm.publish(publication_type = publication_type, version = args.version, private=args.private)
-   else:
-      LOG.error("The path provided does not exist.")
-      return
 
 def display_license(args):
     """ Print out the license. """
