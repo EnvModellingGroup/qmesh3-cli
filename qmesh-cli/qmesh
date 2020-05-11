@@ -32,7 +32,7 @@ def outputGridShapeArgument(s):
     of the output mesh to be specified as a slash-delimited
     pair.'''
     try:
-        outputXiLength, outputEtaLength = map(int , s.split('/'))
+        outputXiLength, outputEtaLength = list(map(int , s.split('/')))
         return outputXiLength, outputEtaLength
     except:
         raise argparse.ArgumentTypeError('Output grid shape must be specified as a slash-delimited pair.')
