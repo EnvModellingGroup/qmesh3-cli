@@ -176,7 +176,8 @@ def main():
     # The rest of this function is effectively checking all of the arguments
     # against the command specified
     # Each command is given a function to execute via the "set_default" argument
-    #args.func(args)
+    func = args.func
+    func(args)
 
 #--------------------------------------------------------------------#
 # ----------     Functions proper from here on in       -------------#
